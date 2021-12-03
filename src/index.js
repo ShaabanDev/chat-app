@@ -13,10 +13,15 @@ const pubPath = path.join(__dirname, "../public");
 app.use(express.static(pubPath));
 
 io.on("connection", (socket) => {
-    socket.emit('welcomeMessage','Welcome to our chat')
+    socket.emit('message','Welcome to our chat');
+
+    socket.broadcast.emit('message','A new user has be joined');
+
   socket.on("messageSent", (message) => {
     io.emit("receiveMessage", message);
   });
+
+
 });
 
 app.get("/", (req, res) => {

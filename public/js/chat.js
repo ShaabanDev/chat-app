@@ -1,5 +1,5 @@
 const socket = io();
-socket.on('welcomeMessage',(message)=>{
+socket.on('message',(message)=>{
     console.log(message);
 })
 socket.on("receiveMessage", (message) => {
