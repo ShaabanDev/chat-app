@@ -18,12 +18,15 @@ io.on("connection", (socket) => {
 
   socket.broadcast.emit("message", "A new user has joined");
 
-  socket.on("messageSent", (message) => {
+  socket.on("messageSent", (message, callback) => {
     const filter = new Filter();
     if (filter.isProfane(message)) {
-      return io.emit("receiveMessage", filter.clean(message));
+      io.emit("receiveMessage", filter.clean(message));
+      callback();
+      return;
     }
     io.emit("receiveMessage", message);
+    callback();
   });
   socket.on("disconnect", () => {
     io.emit("message", "A user has left");
