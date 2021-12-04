@@ -5,6 +5,7 @@ const path = require("path");
 // import http module
 const http = require("http");
 const socketIO = require("socket.io");
+const Filter = require("bad-words");
 
 const app = express();
 const server = http.createServer(app);
@@ -18,15 +19,23 @@ io.on("connection", (socket) => {
   socket.broadcast.emit("message", "A new user has joined");
 
   socket.on("messageSent", (message) => {
+    const filter = new Filter();
+    if (filter.isProfane(message)) {
+      return io.emit("receiveMessage", filter.clean(message));
+    }
     io.emit("receiveMessage", message);
   });
   socket.on("disconnect", () => {
     io.emit("message", "A user has left");
   });
 
-  socket.on('location',(position)=>{
-    io.emit('userLocation',(`https://google.com/maps?q=${position.latitude},${position.longitude}`));
-  })
+  socket.on("location", (position, callback) => {
+    io.emit(
+      "userLocation",
+      `https://google.com/maps?q=${position.latitude},${position.longitude}`
+    );
+    callback();
+  });
 });
 
 app.get("/", (req, res) => {

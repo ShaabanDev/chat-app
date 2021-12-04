@@ -20,9 +20,15 @@ document.querySelector("#shareLocation").addEventListener("click", (e) => {
     return window.alert("Your Browser does not support geolocation");
   }
   navigator.geolocation.getCurrentPosition((position) => {
-    socket.emit("location", {
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-    });
+    socket.emit(
+      "location",
+      {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      },
+      () => {
+        console.log("Location Shared");
+      }
+    );
   });
 });
