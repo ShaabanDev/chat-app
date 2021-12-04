@@ -21,11 +21,11 @@ io.on("connection", (socket) => {
   socket.on("messageSent", (message, callback) => {
     const filter = new Filter();
     if (filter.isProfane(message)) {
-      io.emit("receiveMessage", filter.clean(message));
+      io.emit("message", filter.clean(message));
       callback();
       return;
     }
-    io.emit("receiveMessage", message);
+    io.emit("message", message);
     callback();
   });
   socket.on("disconnect", () => {
