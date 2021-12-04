@@ -20,8 +20,12 @@ io.on("connection", (socket) => {
   socket.on("messageSent", (message) => {
     io.emit("receiveMessage", message);
   });
-  socket.on('disconnect',()=>{
-      io.emit('message','A user has left')
+  socket.on("disconnect", () => {
+    io.emit("message", "A user has left");
+  });
+
+  socket.on('location',(position)=>{
+    io.emit('userLocation',(`https://google.com/maps?q=${position.latitude},${position.longitude}`));
   })
 });
 
