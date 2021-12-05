@@ -31,7 +31,7 @@ const removeUser = (id) => {
   });
 
   if (index !== -1) {
-    return users.splice(index, 1);
+    return users.splice(index, 1)[0];
   }
 };
 
@@ -43,3 +43,10 @@ const getUsersInRoom = (room) => {
   room = room.trim().toLowerCase();
   return users.filter((user) => user.room === room);
 };
+
+module.exports = {
+    addUser,
+    removeUser,
+    getUser,
+    getUsersInRoom
+}
