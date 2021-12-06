@@ -26,10 +26,16 @@ io.on("connection", (socket) => {
       return callback(error);
     }
     socket.join(user.room);
-    socket.emit("message", generateMessage("Welcome to our chat"));
+    socket.emit(
+      "message",
+      generateMessage(user.username, "Welcome to our chat")
+    );
     socket.broadcast
       .to(user.room)
-      .emit("message", generateMessage(`${user.username} has joined`));
+      .emit(
+        "message",
+        generateMessage(user.username, `${user.username} has joined`)
+      );
     callback();
   });
 
@@ -37,16 +43,23 @@ io.on("connection", (socket) => {
     const user = getUser(socket.id);
     const filter = new Filter();
     if (filter.isProfane(message)) {
-      io.to(user.room).emit("message", generateMessage(filter.clean(message)));
+      io.to(user.room).emit(
+        "message",
+        generateMessage(user.username, filter.clean(message))
+      );
       callback();
       return;
     }
-    io.to(user.room).emit("message", generateMessage(message));
+    io.to(user.room).emit("message", generateMessage(user.username, message));
     callback();
   });
   socket.on("disconnect", () => {
     const user = removeUser(socket.id);
-    if (user) io.to(user.room).emit("message", generateMessage(`${user.username} has left`));
+    if (user)
+      io.to(user.room).emit(
+        "message",
+        generateMessage(user.username, `${user.username} has left`)
+      );
   });
 
   socket.on("location", (position, callback) => {
@@ -54,6 +67,7 @@ io.on("connection", (socket) => {
     io.to(user.room).emit(
       "userLocation",
       generateMessage(
+        user.username,
         `https://google.com/maps?q=${position.latitude},${position.longitude}`
       )
     );
