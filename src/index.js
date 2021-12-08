@@ -14,6 +14,8 @@ const {
   getUsersInRoom,
 } = require("./utils/users");
 const app = express();
+const port = process.env.PORT || 3000;
+
 const server = http.createServer(app);
 const io = socketIO(server);
 const pubPath = path.join(__dirname, "../public");
@@ -36,6 +38,12 @@ io.on("connection", (socket) => {
         "message",
         generateMessage(user.username, `${user.username} has joined`)
       );
+
+      io.to(user.room).emit('roomChanges',{
+        room: user.room,
+        users: getUsersInRoom(user.room)
+      });
+
     callback();
   });
 
@@ -56,10 +64,19 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     const user = removeUser(socket.id);
     if (user)
+    {
       io.to(user.room).emit(
         "message",
         generateMessage(user.username, `${user.username} has left`)
       );
+
+      io.to(user.room).emit('roomChanges',{
+        room: user.room,
+        users: getUsersInRoom(user.room)
+      });
+
+    }    
+
   });
 
   socket.on("location", (position, callback) => {
@@ -79,6 +96,6 @@ app.get("/", (req, res) => {
   res.render();
 });
 
-server.listen(process.env.PORT, () => {
-  console.log("server is on port " + process.env.PORT);
+server.listen(port, () => {
+  console.log("server is on port " + port);
 });

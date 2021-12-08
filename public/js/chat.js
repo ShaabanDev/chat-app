@@ -5,11 +5,14 @@ const $messageFormInput = $messageForm.querySelector("input");
 const $messageFromButton = $messageForm.querySelector("button");
 const $shareLocationButton = document.querySelector("#shareLocation");
 const $messages = document.querySelector("#messages");
+const $chatSideBar = document.querySelector('.chat__sidebar');
 
 const messageTemplate = document.querySelector("#message-template").innerHTML;
 const locationTemplate = document.querySelector(
   "#location-message-template"
 ).innerHTML;
+
+const roomUsersTemplate = document.querySelector('#room-users-template').innerHTML;
 
 const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
@@ -34,6 +37,13 @@ socket.on("userLocation", (position) => {
   });
   $messages.insertAdjacentHTML("beforeend", html);
 });
+
+socket.on('roomChanges',({room, users})=>{
+  $chatSideBar.innerHTML=''
+  const html = Mustache.render(roomUsersTemplate,{room, users});
+  $chatSideBar.insertAdjacentHTML('beforeend',html);
+
+})
 
 $messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
