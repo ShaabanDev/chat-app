@@ -3,13 +3,13 @@ Chat App built using NodeJs, Express, JavaScript, Socket.IO, Mustache, Moment.js
 
 ## Hosted Domain Link
 
-[Chat-Link](https://hussein-chat-app.herokuapp.com/)
+[Chat-Link](http://mo-sh-chat-app.herokuapp.com/)
 
 ## Quick start
 
 ```bash
 # clone the repo
-git clone https://github.com/HusseinMoHu/Chat-App.git 
+git clone https://github.com/mosh3ban/Chat-App.git 
 # install 
 npm install
 # run
